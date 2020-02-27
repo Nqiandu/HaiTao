@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cf.honeybear.haitao.mapper.MenuMapper">
+  <resultMap id="BaseResultMap" type="cf.honeybear.haitao.entity.Menu">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="keepAlive" jdbcType="BIT" property="keepalive" />
+    <result column="requireAuth" jdbcType="BIT" property="requireauth" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="iconCls" jdbcType="VARCHAR" property="iconcls" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from menu
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cf.honeybear.haitao.entity.Menu">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into menu (name, level, pid, 
+      path, comment, keepAlive, 
+      requireAuth, enabled, iconCls
+      )
+    values (#{name,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, 
+      #{path,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, #{keepalive,jdbcType=BIT}, 
+      #{requireauth,jdbcType=BIT}, #{enabled,jdbcType=BIT}, #{iconcls,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cf.honeybear.haitao.entity.Menu">
+    update menu
+    set name = #{name,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      pid = #{pid,jdbcType=INTEGER},
+      path = #{path,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR},
+      keepAlive = #{keepalive,jdbcType=BIT},
+      requireAuth = #{requireauth,jdbcType=BIT},
+      enabled = #{enabled,jdbcType=BIT},
+      iconCls = #{iconcls,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, level, pid, path, comment, keepAlive, requireAuth, enabled, iconCls
+    from menu
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, level, pid, path, comment, keepAlive, requireAuth, enabled, iconCls
+    from menu
+  </select>
+</mapper>
