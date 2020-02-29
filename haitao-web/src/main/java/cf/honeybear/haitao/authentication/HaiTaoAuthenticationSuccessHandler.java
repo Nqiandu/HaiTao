@@ -27,7 +27,6 @@ public class HaiTaoAuthenticationSuccessHandler implements AuthenticationSuccess
         User user = (User) authentication.getPrincipal();//登陆成功的User对象
         user.setPassword(null);
         Result ok = Result.ok("登陆成功",user);
-    System.out.println("11111111111111111111111"+ok);
         String s = new ObjectMapper().writeValueAsString(ok);
         out.write(s);
         out.flush();

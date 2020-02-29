@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-//@Component("haiTaoAuthenticationFailureHandler")
+@Component("haiTaoAuthenticationFailureHandler")
 public class HaiTaoAuthenticationFailureHandler implements AuthenticationFailureHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-        logger.info("登陆失败"+ ","+"用户名是："+ UserUtils.getCurrentHr().getUsername());
-        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        logger.info("登陆失败");
+        //response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         Result result = Result.erro("登陆失败!");
@@ -42,4 +42,5 @@ public class HaiTaoAuthenticationFailureHandler implements AuthenticationFailure
         out.flush();
         out.close();
     }
+
 }

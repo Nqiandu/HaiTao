@@ -1,40 +1,35 @@
 package cf.honeybear.haitao.config;
 
 import cf.honeybear.haitao.service.UserService;
-import cf.honeybear.haitao.vo.Result;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private final UserService userService;
+    private final AuthenticationSuccessHandler haiTaoAuthenticationSuccessHandler;
+    private final AuthenticationFailureHandler haiTaoAuthenticationFailureHandler;
+    private final LogoutSuccessHandler logoutSuccessHandler;
+
     @Autowired
-    private UserService userService;
-    @Autowired
-    private AuthenticationSuccessHandler haiTaoAuthenticationSuccessHandler;
-    @Autowired
-    private AuthenticationFailureHandler authenticationFailureHandler;
-    @Autowired
-    private LogoutSuccessHandler logoutSuccessHandler;
+    public SecurityConfig(UserService userService, AuthenticationSuccessHandler haiTaoAuthenticationSuccessHandler, AuthenticationFailureHandler haiTaoAuthenticationFailureHandler, LogoutSuccessHandler logoutSuccessHandler) {
+        this.userService = userService;
+        this.haiTaoAuthenticationSuccessHandler = haiTaoAuthenticationSuccessHandler;
+        this.haiTaoAuthenticationFailureHandler = haiTaoAuthenticationFailureHandler;
+        this.logoutSuccessHandler = logoutSuccessHandler;
+    }
 
     @Bean
     PasswordEncoder passwordEncoder(){
@@ -48,31 +43,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/login","/login.jsp","/**/*.js",
-                "/**/*.css",
-                "/**/*.jpg",
-                "/**/*.png",
-                "/**/*.gif");
+        web.ignoring().antMatchers(HttpMethod.GET,
+
+                "/resource/**/*.js",
+                "/resource/**/*.css",
+                "/resource/**/*.woff",
+                "/resource/**/*.ttf",
+                "/resource/**/*.jpg",
+                "/resource/**/*.png",
+                "/resource/**/*.gif");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .and()
+        http
                 .formLogin()
                     .usernameParameter("username")
                     .passwordParameter("password")
                     .loginProcessingUrl("/doLogin")
-                    .loginPage("/login.jsp")
+                    .loginPage("/authentication/require")
                     .successHandler(haiTaoAuthenticationSuccessHandler)
-                    .failureHandler(authenticationFailureHandler)
-
+                    .failureHandler(haiTaoAuthenticationFailureHandler)
+                    .permitAll()
                 .and()
                 .logout()
                     .logoutUrl("/logout")
                     .logoutSuccessHandler(logoutSuccessHandler)
                     .deleteCookies("JSESSIONID")
                 .permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/authentication/require",
+                        "/login.jsp").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .csrf().disable().exceptionHandling();
     }

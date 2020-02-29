@@ -42,7 +42,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <!--[结束]-->
         <!-- 图标 -->
         <%--<link rel="shortcut icon" href="${pageContext.request.contextPath}/resource/ico/favicon.png">--%>
-        <link rel="shortcut icon" href="${pageContext.request.contextPath}/resource/ico/bitbug_favicon.ico">
 
 		
 		
@@ -100,9 +99,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 											success:function(data){
 												if (data.code==200) {
                                                     layer.msg(data.msg)
-													//location.href="module/index.jsp";
+													location.href="module/index.jsp";
 												}else{
-												    console.log(data)
 													layer.msg(data.msg);
 												}
 											}

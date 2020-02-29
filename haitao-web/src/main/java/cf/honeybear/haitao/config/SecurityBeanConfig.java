@@ -21,9 +21,4 @@ public class SecurityBeanConfig {
         return new HaiTaoLogoutSuccessHandler();
     }
 
-    @Bean
-    @ConditionalOnMissingBean(AuthenticationFailureHandler.class)
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new HaiTaoAuthenticationFailureHandler();
-    }
 }
