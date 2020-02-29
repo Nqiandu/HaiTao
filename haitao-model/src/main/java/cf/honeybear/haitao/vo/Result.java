@@ -8,36 +8,60 @@ import java.io.Serializable;
  * code:返回状态码
  * msg:返回消息（"保存错误"）
  * */
-@Data
 public class Result implements Serializable {
-    private Object object;
-    private FlagEnum code;
+    private Integer code;
     private String msg;
-    private int tatal;
-    private Object other;
+    private Object obj;
 
-    public Result(Object object, FlagEnum code, String msg, int tatal, Object other) {
-        this.object = object;
-        this.code = code;
-        this.msg = msg;
-        this.tatal = tatal;
-        this.other = other;
+    public static Result ok(String msg){
+        return new Result(200,msg,null);
+    }
+    public static Result ok(String msg,Object obj){
+        return new Result(200,msg,obj);
     }
 
-    public Result(FlagEnum code, String msg, int tatal, Object other) {
-        this.code = code;
-        this.msg = msg;
-        this.tatal = tatal;
-        this.other = other;
+    public static Result erro(String msg){
+        return new Result(500,msg,null);
     }
-    public Result(Object object, FlagEnum code, String msg) {
-        this.object = object;
-        this.code = code;
-        this.msg = msg;
+    public static Result erro(String msg,Object obj){
+        return new Result(500,msg,obj);
     }
-    public Result(FlagEnum code, String msg) {
+    public Result(){
+
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
         this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
         this.msg = msg;
     }
 
+    public Object getObj() {
+        return obj;
+    }
+
+    public void setObj(Object obj) {
+        this.obj = obj;
+    }
+
+    public Result(Integer code, String msg, Object obj) {
+        this.code = code;
+        this.msg = msg;
+        this.obj = obj;
+    }
+    public Result(Integer code, String msg) {
+        this.code = code;
+        this.msg = msg;
+
+    }
 }

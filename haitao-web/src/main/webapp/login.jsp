@@ -22,7 +22,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	-->
 	
 		<!-- Javascript -->
-        <script src="${pageContext.request.contextPath}/resource/js/jquery-1.8.3.min.js"></script>
+        <%--<script src="${pageContext.request.contextPath}/resource/js/jquery-1.8.3.min.js"></script>--%>
+
+        <script src="${pageContext.request.contextPath}/resource/js/jquery.min.js"></script>
         <script src="${pageContext.request.contextPath}/resource/js/jquery.backstretch.min.js"></script>
         <script src="${pageContext.request.contextPath}/resource/bootstrap/js/bootstrap.min.js"></script>
 	<!-- CSS -->
@@ -40,7 +42,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <!--[结束]-->
         <!-- 图标 -->
         <%--<link rel="shortcut icon" href="${pageContext.request.contextPath}/resource/ico/favicon.png">--%>
-        <link rel=icon href=/bitbug_favicon.ico>
+        <link rel="shortcut icon" href="${pageContext.request.contextPath}/resource/ico/bitbug_favicon.ico">
 
 		
 		
@@ -92,13 +94,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									$("#but").click(function(){
 										$.ajax({
 											type:"post",
-											url:"loginsaa",
+											url:"/doLogin",
 											data:$("#loginform").serialize(),
 											datatype:"json",
 											success:function(data){
 												if (data.code==200) {
-													location.href="module/index.jsp";
+                                                    layer.msg(data.msg)
+													//location.href="module/index.jsp";
 												}else{
+												    console.log(data)
 													layer.msg(data.msg);
 												}
 											}

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Data
 public class User implements UserDetails {
     private Integer id;
 
@@ -75,13 +74,13 @@ public class User implements UserDetails {
     }
 
     @Override
-    @JsonIgnore
+    //@JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>(roles.size());
+        /*List<SimpleGrantedAuthority> authorities = new ArrayList<>(roles.size());
         for (Role role : roles){
             authorities.add(new SimpleGrantedAuthority(role.getRolename()));
-        }
-        return authorities;
+        }*/
+        return null;
     }
 
     public String getPassword() {
@@ -108,9 +107,6 @@ public class User implements UserDetails {
         this.phonenum = phonenum == null ? null : phonenum.trim();
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;

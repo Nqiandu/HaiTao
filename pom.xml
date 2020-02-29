@@ -13,6 +13,7 @@
         <module>haitao-service</module>
         <module>haitao-model</module>
         <module>haitao-mapper</module>
+        <module>haitao-common</module>
     </modules>
 
 

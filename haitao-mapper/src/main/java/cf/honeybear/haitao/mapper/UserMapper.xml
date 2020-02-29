@@ -58,4 +58,7 @@
     address, userface, remark
     from user
   </select>
+    <select id="loadUserByUsername" resultMap="BaseResultMap">
+        select * from user where username=#{username}
+    </select>
 </mapper>

@@ -2,7 +2,7 @@ package cf.honeybear.haitao.vo;
 
 public enum  FlagEnum {
 
-    NO("0","否"),
+    NO("0","失败"),
     YES("200","成功");
 
     /**
