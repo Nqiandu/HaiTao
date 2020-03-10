@@ -23,10 +23,12 @@ public class Menu implements Serializable {
 
     private Meta meta;
 
+    private String url; //请求路径
+
     private Boolean enabled;//是否可用
 
-    private List<Menu> children;
-    private List<Role> roles;
+    private List<Menu> children; //子目录
+    private List<Role> roles;   //所有权限
 
     public Integer getId() {
         return id;

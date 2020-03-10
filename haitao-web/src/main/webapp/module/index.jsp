@@ -9,10 +9,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <head>
     <base href="<%=basePath%>">
 
-    <title>Black Cat 物流</title>
+    <title>Hai Tao</title>
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="expires" content="0">
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
 	<!--
@@ -29,27 +29,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			$(function() {
 				$.ajax({
 					type: "post",
-					url: "accordion",
+					url: "/accordion",
 					dataType: "json",
 					async: false, 
 					success: function(data) {
 						$("div #rank").empty();
 						var p = "";
 						for(var i = 0; i < data.length; i++) {
-							p = "<li id='tree-" + data[i].id + "' class='layui-nav-item '><a href='javascript:;'>" + data[i].name + "</a></li>";
+							p = "<li id='tree-" + data[i].pid + "' class='layui-nav-item '><a href='javascript:;'>" + data[i].name + "</a></li>";
 							$("div #rank").append(p);
-							var tid = data[i].id;
+							var tid = data[i].pid;
 							arr.push(tid);
 							$.ajax({
 								type: "post",
-								url: "permission?pid=" + arr[i],
+								url: "/permission/" + arr[i],
 								dataType: "json",
 								async: false,
 								success: function(node) {
 									var t = "";
 									for(var j = 0; j < node.length; j++) {
-										t = "<dl class='layui-nav-child'  > <dd><a class='site-demo-active' data-url='" + node[j].url + "' data-id='" + node[j].id + "' data-title='" + node[j].text + "' data-type='tabAdd'>" + node[j].text + "</a></dd></dl>";
-										$("#tree-" + arr[addone]).append(t);
+                                        t = "<dl class='layui-nav-child'  > <dd><a class='site-demo-active' data-url='" + node[j].path + "' data-id='" + node[j].id + "' data-title='" + node[j].name + "' data-type='tabAdd'>" + node[j].name + "</a></dd></dl>";
+									    $("#tree-" + arr[addone]).append(t);
 									}
 									addone++;
 								}
@@ -58,22 +58,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					}
 				});
 			});
-		</script>
-		<!-- 验证是否登录 -->
-		<script type="text/javascript">
-		$(function(){
-			$.ajax({
-				type:"post",
-				dataType:"json",
-				url:"session",
-				success:function(data){
-					if (data.code==100) {
-						alert(data.msg);
-						window.location.href='login.jsp';
-					}
-				}
-			});
-		});
 		</script>
 		<script>
 			//用户退出
@@ -106,11 +90,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <body class="layui-layout-body">
 		<div class="layui-layout layui-layout-admin">
 			<div class="layui-header">
-				<div class="layui-logo">Black Cat 物流后台管理</div>
+				<div class="layui-logo" >Hai Tao 后台管理</div>
 				<span id="weather"></span>
 				<!-- 头部区域（可配合layui已有的水平导航） -->
 				<ul class="layui-nav layui-layout-left">
-						
+
 				</ul>
 				<ul class="layui-nav layui-layout-right">
 					<li class="layui-nav-item"><span id="systemdate"></span></li>
@@ -121,18 +105,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<script type="text/javascript">
 						$.ajax({
 							type: "post",
-							url: "getUsername",
+							url: "/getUser",
 							async: false,
 							success: function(node) {
 								$("#username").html(node);
 							}
 						});
 						</script>
-						<dl class="layui-nav-child">
-							<dd>
-								<a id="home">首页</a>
-							</dd>
-						</dl>
 					</li>
 					<li class="layui-nav-item">
 						<a href="javascript:out()">注销</a>
@@ -144,7 +123,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<div class="layui-side-scroll">
 					<!-- 左侧导航区域（可配合layui已有的垂直导航） -->
 					<ul id="rank" class="layui-nav layui-nav-tree" lay-shrink="all" lay-filter="test">
-							
+
 					</ul>
 				</div>
 			</div>
@@ -167,7 +146,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		<script>
 			layui.use(['element','table', 'form', 'layer', 'laydate','layedit'], function() {
-				
+
 				var $ = layui.jquery;
 				var element = layui.element;
 				var layer = layui.layer;
@@ -195,7 +174,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						});
 					}
 				};
-				
+
 				function FrameWH() {
 					var h = $(document).height() - 41 - 10 - 44 ;
 					$("iframe").css("height", h + "px");
@@ -204,7 +183,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				$(window).resize(function() {
 					FrameWH();
 				});
-				
+
 				//这时会判断右侧.layui-tab-title属性下的有lay-id属性的li的数目，即已经打开的tab项数目
 				//在网页打开的时候就加载一个页面,不然什么都不显示会太空旷
 				if($(".layui-tab-title  li[lay-id]").length <= 0) {
@@ -212,12 +191,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					active.tabAdd('module/personal/welcome.jsp', 9999, 'Welcome');
 					active.tabChange("9999");
 				}
-				
+
 				$("#home").click(function(){
 					active.tabAdd('module/personal/welcome.jsp', 9999, 'Welcome');
 					active.tabChange("9999");
 				});
-				
+
 				//当点击有site-demo-active属性的标签时，即左侧菜单栏中内容 ，触发点击事件
 				$('.site-demo-active').on('click', function() {
 					var dataid = $(this);
@@ -253,12 +232,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					$('.layui-tab-title,.layui-tab-title li').click(function() {
 						$('.rightmenu').hide();
 					});
-					//桌面点击右击 
+					//桌面点击右击
 					$('.layui-tab-title li').on('contextmenu', function(e) {
 						var popupmenu = $(".rightmenu");
 						popupmenu.find("li").attr("data-id", id); //在右键菜单中的标签绑定id属性
 
-						//判断右侧菜单的位置 
+						//判断右侧菜单的位置
 						l = ($(document).width() - e.clientX) < popupmenu.width() ? (e.clientX - popupmenu.width()) : e.clientX;
 						t = ($(document).height() - e.clientY) < popupmenu.height() ? (e.clientY - popupmenu.height()) : e.clientY;
 						popupmenu.css({
@@ -269,7 +248,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						return false;
 					});
 				}
-				
+
 				/* 关闭选项卡 */
 				$(".rightmenu li").click(function() {
 					//右键菜单中的选项被点击之后，判断type的类型，决定关闭所有还是关闭当前。

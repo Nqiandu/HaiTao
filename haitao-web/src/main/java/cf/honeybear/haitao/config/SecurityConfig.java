@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -48,6 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/resource/**/*.js",
                 "/resource/**/*.css",
                 "/resource/**/*.woff",
+                "/module/87879/**",
+                "/module/27448/**",
                 "/resource/**/*.ttf",
                 "/resource/**/*.jpg",
                 "/resource/**/*.png",
@@ -56,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.headers().frameOptions().disable().and()
                 .formLogin()
                     .usernameParameter("username")
                     .passwordParameter("password")

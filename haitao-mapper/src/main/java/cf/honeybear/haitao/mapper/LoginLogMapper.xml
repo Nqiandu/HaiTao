@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cf.honeybear.haitao.mapper.LoginLogMapper">
+  <resultMap id="BaseResultMap" type="cf.honeybear.haitao.entity.LoginLog">
+    <id column="loginid" jdbcType="INTEGER" property="loginid" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="landingtime" jdbcType="TIMESTAMP" property="landingtime" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="browser_name" jdbcType="VARCHAR" property="browserName" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="loginname" jdbcType="VARCHAR" property="loginname" />
+    <result column="os" jdbcType="VARCHAR" property="os" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from loginlog
+    where loginid = #{loginid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cf.honeybear.haitao.entity.LoginLog">
+    insert into loginlog (loginid, uid, landingtime, 
+      ip, browser_name, location, 
+      loginname, os,name)
+    values (#{loginid,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{landingtime,jdbcType=TIMESTAMP}, 
+      #{ip,jdbcType=VARCHAR}, #{browserName,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, 
+      #{loginname,jdbcType=VARCHAR}, #{os,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cf.honeybear.haitao.entity.LoginLog">
+    update loginlog
+    set uid = #{uid,jdbcType=INTEGER},
+      landingtime = #{landingtime,jdbcType=TIMESTAMP},
+      ip = #{ip,jdbcType=VARCHAR},
+      browser_name = #{browserName,jdbcType=VARCHAR},
+      location = #{location,jdbcType=VARCHAR},
+      loginname = #{loginname,jdbcType=VARCHAR},
+      os = #{os,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR}
+    where loginid = #{loginid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select loginid, uid, landingtime, ip, browser_name, location, loginname, os , name
+    from loginlog
+    where loginid = #{loginid,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select loginid, uid, landingtime, ip, browser_name, location, loginname, os , name
+    from loginlog
+  </select>
+
+  <select id="getLastTimeById" resultMap="BaseResultMap">
+    SELECT DATE_FORMAT(max(l.landingtime),'%Y-%m-%d %k:%i:%s') as landingtime,l.name name FROM `loginlog` l WHERE l.uid =#{uid}
+  </select>
+</mapper>

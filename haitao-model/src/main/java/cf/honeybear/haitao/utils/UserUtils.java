@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 /**拿到当前登录的User信息 */
 public class UserUtils {
-    public static User getCurrentHr(){
+    public static User getCurrentUser(){
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
