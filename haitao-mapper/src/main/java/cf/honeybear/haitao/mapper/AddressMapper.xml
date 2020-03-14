@@ -5,31 +5,31 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="othername" jdbcType="VARCHAR" property="othername"/>
-        <result column="phone" jdbcType="INTEGER" property="phone"/>
-        <result column="province" jdbcType="VARCHAR" property="province"/>
-        <result column="city" jdbcType="VARCHAR" property="city"/>
-        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="province" jdbcType="INTEGER" property="province"/>
+        <result column="city" jdbcType="INTEGER" property="city"/>
+        <result column="area" jdbcType="INTEGER" property="area"/>
         <result column="detailadress" jdbcType="VARCHAR" property="detailadress"/>
         <result column="createtime" jdbcType="TIMESTAMP" property="createtime"/>
         <result column="defaultaddress" jdbcType="INTEGER" property="defaultaddress"/>
         <result column="binding" jdbcType="INTEGER" property="binding"/>
         <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
     </resultMap>
-    <resultMap id="Base2" type="cf.honeybear.haitao.vo.AddressWithAreaInfo">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="othername" jdbcType="VARCHAR" property="othername"/>
-        <result column="phone" jdbcType="INTEGER" property="phone"/>
-        <result column="province" jdbcType="VARCHAR" property="province"/>
-        <result column="city" jdbcType="VARCHAR" property="city"/>
-        <result column="area" jdbcType="VARCHAR" property="area"/>
-        <result column="pca" jdbcType="VARCHAR" property="pca"/>
-        <result column="detailadress" jdbcType="VARCHAR" property="detailadress"/>
-        <result column="createtime" jdbcType="TIMESTAMP" property="createtime"/>
-        <result column="defaultaddress" jdbcType="INTEGER" property="defaultaddress"/>
-        <result column="binding" jdbcType="INTEGER" property="binding"/>
-        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
-    </resultMap>
+    <!--<resultMap id="Base2" type="cf.honeybear.haitao.vo.AddressWithAreaInfo">-->
+        <!--<id column="id" jdbcType="INTEGER" property="id"/>-->
+        <!--<result column="name" jdbcType="VARCHAR" property="name"/>-->
+        <!--<result column="othername" jdbcType="VARCHAR" property="othername"/>-->
+        <!--<result column="phone" jdbcType="VARCHAR" property="phone"/>-->
+        <!--<result column="province" jdbcType="VARCHAR" property="province"/>-->
+        <!--<result column="city" jdbcType="VARCHAR" property="city"/>-->
+        <!--<result column="area" jdbcType="VARCHAR" property="area"/>-->
+        <!--<result column="pca" jdbcType="VARCHAR" property="pca"/>-->
+        <!--<result column="detailadress" jdbcType="VARCHAR" property="detailadress"/>-->
+        <!--<result column="createtime" jdbcType="TIMESTAMP" property="createtime"/>-->
+        <!--<result column="defaultaddress" jdbcType="INTEGER" property="defaultaddress"/>-->
+        <!--<result column="binding" jdbcType="INTEGER" property="binding"/>-->
+        <!--<result column="remarks" jdbcType="VARCHAR" property="remarks"/>-->
+    <!--</resultMap>-->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete
         from address
@@ -79,32 +79,13 @@
         from address
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="selectAll" resultMap="Base2">
-        select a.id,
-               a.`name`,
-               a.othername,
-               a.phone,
-               CONCAT(a1.`name`, '->', a2.`name`, '->', a3.`name`) pca,
-               a.detailadress,
-               a.createtime,
-               a.defaultaddress,
-               a.binding,
-               a1.`name`                                           province,
-               a2.`name`                                           city,
-               a3.`name`                                           area,
-               a.remarks
-        from address a,
-             areainfo a1,
-             areainfo a2,
-             areainfo a3
-        WHERE a.province = a1.id
-          AND a.area = a2.id
-          AND a2.parentid = a3.id
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from address
     </select>
     <select id="count" resultType="int">
         SELECT COUNT(*) FROM address
     </select>
-    
+
     <select id="nameRepeat" resultType="int">
         SELECT COUNT(*) FROM address WHERE `name` = #{name}
     </select>

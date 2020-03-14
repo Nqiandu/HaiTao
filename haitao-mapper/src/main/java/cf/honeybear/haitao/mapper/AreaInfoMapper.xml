@@ -7,6 +7,33 @@
     <result column="arealevel" jdbcType="TINYINT" property="arealevel" />
     <result column="parentid" jdbcType="INTEGER" property="parentid" />
   </resultMap>
+  <resultMap id="Base1" type="cf.honeybear.haitao.CacheI.ProvinceI">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="arealevel" jdbcType="TINYINT" property="arealevel" />
+  </resultMap>
+
+
+      <resultMap id="A_1_ALL_T" type="cf.honeybear.haitao.CacheI.CityI">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="parentid" jdbcType="INTEGER" property="parentid" />
+      </resultMap>
+
+
+    <resultMap id="ALL_T" type="cf.honeybear.haitao.CacheI.City_T">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="parentid" jdbcType="INTEGER" property="parentid" />
+    </resultMap>
+
+
+  <resultMap id="Base3" type="cf.honeybear.haitao.CacheI.AreaI">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="arealevel" jdbcType="TINYINT" property="arealevel" />
+    <result column="parentid" jdbcType="INTEGER" property="parentid" />
+  </resultMap>
   <select id="getProvance" resultMap="BaseResultMap">
     select * from areainfo where arealevel=1
   </select>
@@ -17,5 +44,25 @@
 
   <select id="getArea" resultMap="BaseResultMap">
     select * from areainfo where parentid=#{pid}
+  </select>
+
+  <select id="getAllProvince" resultMap="Base1">
+    select id,`name` from areainfo where arealevel=1
+  </select>
+
+  <select id="getAllCity" resultMap="ALL_T">
+    select id,`name`,parentid from areainfo
+  </select>
+
+    <!---->
+
+    <select id="getAllCityOfProvince" resultMap="ALL_T">
+        select id,`name`,parentid from areainfo where arealevel=2 and  parentid=#{pid}
+    </select>
+
+    <!---->
+
+  <select id="getAllAreaOfCity" resultMap="Base3">
+    select id,`name`,parentid from areainfo where parentid=#{pid} and arealevel=3
   </select>
 </mapper>

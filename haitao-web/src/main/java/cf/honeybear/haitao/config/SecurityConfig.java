@@ -9,11 +9,16 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -21,18 +26,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationSuccessHandler haiTaoAuthenticationSuccessHandler;
     private final AuthenticationFailureHandler haiTaoAuthenticationFailureHandler;
     private final LogoutSuccessHandler logoutSuccessHandler;
+    private final DataSource dataSource;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public SecurityConfig(UserService userService, AuthenticationSuccessHandler haiTaoAuthenticationSuccessHandler, AuthenticationFailureHandler haiTaoAuthenticationFailureHandler, LogoutSuccessHandler logoutSuccessHandler) {
+    public SecurityConfig(UserService userService, AuthenticationSuccessHandler haiTaoAuthenticationSuccessHandler, AuthenticationFailureHandler haiTaoAuthenticationFailureHandler, LogoutSuccessHandler logoutSuccessHandler, DataSource dataSource, UserDetailsService userDetailsService) {
         this.userService = userService;
         this.haiTaoAuthenticationSuccessHandler = haiTaoAuthenticationSuccessHandler;
         this.haiTaoAuthenticationFailureHandler = haiTaoAuthenticationFailureHandler;
         this.logoutSuccessHandler = logoutSuccessHandler;
+        this.dataSource = dataSource;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
     }
 
     @Override
@@ -66,6 +82,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .successHandler(haiTaoAuthenticationSuccessHandler)
                     .failureHandler(haiTaoAuthenticationFailureHandler)
                     .permitAll()
+                .and()
+                    .rememberMe()
+                    .tokenRepository(persistentTokenRepository())
+                    .tokenValiditySeconds(259200)
+                    .userDetailsService(userDetailsService)
                 .and()
                 .logout()
                     .logoutUrl("/logout")

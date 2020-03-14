@@ -20,7 +20,7 @@ public class AddressWithAreaInfo implements Serializable {
 
     private String othername;
 
-    private Integer phone;
+    private String phone;
 
     private String province;
 
@@ -67,11 +67,11 @@ public class AddressWithAreaInfo implements Serializable {
         this.othername = othername == null ? null : othername.trim();
     }
 
-    public Integer getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(Integer phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

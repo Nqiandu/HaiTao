@@ -15,15 +15,23 @@ public class Address implements Serializable {
 
     private String othername;
 
-    private Integer phone;
+    private String phone;
 
     private Integer province;
 
+    private String provinceStr;
+
     private Integer city;
+
+    private String cityStr;
 
     private Integer area;
 
+    private String areaStr;
+
     private String detailadress;
+
+    private String pca;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtime;
@@ -36,6 +44,9 @@ public class Address implements Serializable {
 
 
     private static final long serialVersionUID = 1L;
+
+    public Address() {
+    }
 
     public Integer getId() {
         return id;
@@ -61,11 +72,11 @@ public class Address implements Serializable {
         this.othername = othername == null ? null : othername.trim();
     }
 
-    public Integer getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(Integer phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

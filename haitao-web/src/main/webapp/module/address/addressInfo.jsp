@@ -48,14 +48,6 @@
                 <div class="layui-inline">
                     <input id="telephone" name="telephone" type="text" class="layui-input">
                 </div>
-                <div class="layui-inline" >入职日期：</div>
-                <div class="layui-inline" >
-                    <input type="text" name="beginDate" id="beginDate" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input">
-                </div>
-                <div class="layui-inline">--</div>
-                <div class="layui-inline" >
-                    <input type="text" name="endDate" id="endDate" placeholder="yyyy-mm-dd" autocomplete="off" class="layui-input">
-                </div>
                 <div class="layui-inline">
                     <button class="layui-btn" id="search" data-type="reload">查询</button>
                 </div>
@@ -93,7 +85,7 @@
             ,defaultToolbar: ['filter']
             ,cellMinWidth:80
             ,limit:15
-            ,url:'/address/getAllAddress' //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            ,url:'/getAllAddress' //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             ,request: {
                 pageName: 'currentPage' //页码的参数名称，默认：page
                 ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
@@ -105,8 +97,8 @@
                 ,{field:'othername', title: '地址别名', sort: true,align: 'center'}
                 ,{field:'name', title: '姓名', align: 'center',sort: true}
                 ,{field:'phone', title: '电话', align: 'center'}
-                ,{field:'pca', title: '省市区', sort: true, align: 'center'}
-                ,{field:'detailaddress', title: '详细地址', sort: true, align: 'center'}
+                ,{field:'pca', title: '省市区', sort: true, align: 'left'}
+                ,{field:'detailadress', title: '详细地址', sort: true, align: 'center'}
                 ,{field:'remarks', title: '备注', sort: true, align: 'center'}
                 ,{field:'province', title: '省', sort: true, align: 'center',hide:true}
                 ,{field:'city', title: '市', sort: true, align: 'center',hide:true}
@@ -163,7 +155,7 @@
                         type:"post",
                         dataType:"json",
                         data:data,
-                        url:"/address/delete/"+data.id,
+                        url:"/addressdelete/"+data.id,
                         success:function(res){
                             if (res.code==200) {
                                 layer.msg(res.msg,{time:1000},function() {
@@ -182,7 +174,7 @@
         $("#addbtn").click(function() {
             layer.open({
                 type : 2,
-                title : "添加员工",
+                title : "添加地址",
                 area : [ '750px', '600px' ],
                 skin: 'layui-layer-rim', //加上边框
                 offset: '10px',

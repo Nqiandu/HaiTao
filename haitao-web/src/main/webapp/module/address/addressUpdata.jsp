@@ -44,7 +44,7 @@
 
             <label class="layui-form-label">地址别名：</label>
             <div class="layui-input-inline">
-                <input type="text" name="otherName" id="otherName" lay-verify="otherName" placeholder="请输入2-8位字符~"
+                <input type="text" name="othername" id="othername" lay-verify="othername" placeholder="请输入2-8位字符~"
                        autocomplete="off" class="layui-input">
             </div>
 
@@ -102,7 +102,7 @@
             <label class="layui-form-label">详细地址：</label>
             <div class="layui-input-block" style="width: 500px">
                 <input type="text" name="detailadress" id="detailadress" required lay-verify="required" placeholder="请输入详细地址" autocomplete="off"
-                       required lay-verify="detailaddress|required"
+                       required lay-verify="detailadress|required"
                        class="layui-input">
             </div>
         </div>
@@ -112,7 +112,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">备注：</label>
                 <div class="layui-input-block" style="width: 500px;">
-                    <textarea name="remarks" id="remarks" required lay-verify="detailaddress|required"
+                    <textarea name="remarks" id="remarks"
                               class="layui-textarea"></textarea>
                 </div>
             </div>
@@ -138,95 +138,141 @@
         $ = layui.jquery;
         $form = $('form');
         form.render();//渲染表单
+        var raw = null;
+        var inited = false;
+        var register = false;
 
-        //获取所有省份
-        $.get("getProvance", function (data) {
+        //数据填充
+        //id:pid 地域的父ID
+        //uri:地区数据的请求地址
+        function fillData(id,uri){
+
             var firstHtml = "";
-            for (var i = 0; i < data.length; i++) {
-                firstHtml += "<option  value=" + data[i].id + ">" + data[i].name + "</option>";
-            }
-            //初始化数据
-            $("#province").append(firstHtml);
-            form.render();
-        });
+            var range = "city";
 
-        form.on('select(province)', function (data) {
-            $.post("getCity", {"pid": data.value}, function (res) {
-                var firstHtml = "";
-                $("#city").empty();
-                $("#area").empty();
+            switch (uri) {
+                case "getCity" :
+                    //填充地级市的数据
+                    // data.value
+                    $("#city").empty();
+                    break;
+                case "getArea":
+                    //填充县级市/区的数据
+                    //$("#city").val()
+                    $("#area").empty();
+                    range = "area";
+                    break;
+                case "getProvance":
+                    //获取所有省份
+                    $.get(uri, function (set) {
+                        for (var i = 0; i < set.length; i++) {
+                            firstHtml += "<option  value=" + set[i].id + ">" + set[i].name + "</option>";
+                        }
+                        //初始化数据
+                        $("#province").append(firstHtml);
+
+                        if (raw != null){
+                            form.val("formDemo", {
+                                "province": raw.province
+                            });
+                        }else{
+                            form.val("formDemo", {
+                                "province": set[0].id
+                            });
+                        }
+                        form.render();
+                        fillData($("#province").val(),"getCity");
+                    });
+                    return;
+            }
+
+            $.post(uri, {"pid":id}, function (res) {
+
                 for (var i = 0; i < res.length; i++) {
                     firstHtml += "<option value=" + res[i].id + ">" + res[i].name + "</option>";
                 }
-                //初始化数据
-                $("#city").append(firstHtml);
-                $.post("getArea", {"pid": $("#city").val()}, function (res) {
-                    var firstHtml = "";
-                    $("#area").empty();
-                    for (var i = 0; i < res.length; i++) {
-                        firstHtml += "<option value=" + res[i].id + ">" + res[i].name + "</option>";
+                //插入html到指定位置
+                $("#" + range).append(firstHtml);
+
+                if ("getCity" === uri) {
+                    if (raw != null){
+                        form.val("formDemo", {
+                            "city": raw.city
+                        });
+                    }else{
+                        form.val("formDemo", {
+                            "city": res[0].id
+                        });
                     }
-                    //初始化数据
-                    $("#area").append(firstHtml);
-                    form.render();
-                });
+                    fillData($("#city").val(),"getArea");
+                }else if("getArea" === uri){
+                    if (raw != null) {
+                        form.val("#formDemo", {
+                            "area": raw.area
+                        });
+                    }else{
+                        form.val("formDemo", {
+                            "area": res[0].id
+                        });
+                    }
+                }
                 form.render();
             });
+
+        }
+
+        //获取用户信息
+        (function(){
+            /* 根据id为表单赋值 */
+            function flash(res) {
+                console.log(typeof res)
+                form.val("formDemo", {
+                    "othername": res.obj[0].othername,
+                    "name": res.obj[0].name,
+                    "phone": res.obj[0].phone,
+                    "state": res.obj[0].state,
+                    "detailadress": res.obj[0].detailadress
+                });
+                raw = res.obj[0];
+                form.render();
+                inited = true;
+                fillData(null,"getProvance");
+            };
+
+            if (!inited) {
+                var addressId = $("#id").val();
+                if (addressId === ""){
+                    register = true;
+                    fillData(null,"getProvance");
+                    return;
+                }
+                $.ajax({
+                    type: "post",
+                    dataType: "json",
+                    url: "/address/" + addressId,
+                    success: flash
+                });
+            }
+        })()
+
+        //city 地级市 area 县级市/区 p 省份
+        form.on('select(province)', function (data) {
+            fillData(data.value,"getCity");
         });
 
         /* 监听city下拉框选中事件 */
         form.on('select(city)', function (data) {
-            $.post("getArea", {"pid": data.value}, function (res) {
-                var firstHtml = "";
-                $("#area").empty();
-                for (var i = 0; i < res.length; i++) {
-                    firstHtml += "<option value=" + res[i].id + ">" + res[i].name + "</option>";
-                }
-                //初始化数据
-                $("#area").append(firstHtml);
-                form.render();
-            });
+            fillData(data.value,"getArea");
+            $("#area").empty();
+
         });
 
-        //获取员工所有状态
-        $.get("getEmpStatus", function (data) {
-            var option = '';
-            for (var i = 0; i < data.length; i++) {
-                option += "<option value=" + data[i].statusid + ">" + data[i].statusname + "</option>";
-            }
-            //初始化数据
-            $("#state").append(option);
-            form.render();
-        });
-
-        /* 根据id为表单赋值 */
-        $.ajax({
-            type: "post",
-            dataType: "json",
-            url: "/address/" + $("#id").val(),
-            success: function (res) {
-                console.log(res.obj[0])
-                form.val("formDemo", {
-                    "otherName": res.obj[0].othername,
-                    "name": res.obj[0].name,
-                    "idcard": res.obj[0].idcard,
-                    "hiredate": res.obj[0].hiredate,
-                    "groups": res.obj[0].groups,
-                    "roleid": res.obj[0].roleid,
-                    "state": res.obj[0].state,
-                    "detailaddress": res.obj.detailaddress
-                });
-                form.render();
-            }
-        });
-
-
-        /* 添加 修改员工信息 */
+        /* 添加 修改地址信息 */
         form.on('submit(editsub)', function (data) {
-            var eid = $("#id").val();
-            var urltwo = "addEmp";
-            if (eid != "") {
-                urltwo = "updateEmp";
+            var uid = $("#id").val();
+            var urltwo = "/addressadd";
+            if (uid != "") {
+                urltwo = "/addressupdate";
             }
             $.ajax({
                 type: "post",
@@ -253,19 +299,7 @@
                 layer.msg("请选择省");
                 $("#bth").addClass("layui-btn-disabled");
                 $("#bth").attr("disabled", true);
-            } else if ($("#groups").val() == "") {
-                layer.msg("请选择组!");
-                $("#bth").addClass("layui-btn-disabled");
-                $("#bth").attr("disabled", true);
-            } else if ($("#roleid").val() == "") {
-                layer.msg("请选择职位!");
-                $("#bth").addClass("layui-btn-disabled");
-                $("#bth").attr("disabled", true);
-            } else if ($("#state").val() == "") {
-                layer.msg("请选择状态!");
-                $("#bth").addClass("layui-btn-disabled");
-                $("#bth").attr("disabled", true);
-            } else {
+            }  else {
                 $("#bth").removeClass("layui-btn-disabled");
                 $("#bth").attr("disabled", false);
                 shijiao();

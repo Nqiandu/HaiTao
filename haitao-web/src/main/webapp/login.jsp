@@ -40,8 +40,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
        <%--  <script src="${pageContext.request.contextPath}/resource/js/html5shiv.js"></script>
         <script src="${pageContext.request.contextPath}/resource/js/respond.min.js"></script> --%>
         <!--[结束]-->
-        <!-- 图标 -->
-        <%--<link rel="shortcut icon" href="${pageContext.request.contextPath}/resource/ico/favicon.png">--%>
 
 		
 		
@@ -81,7 +79,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			                        	<input type="password" name="password" placeholder="密码..." class="form-password form-control" id="form-password">
 			                        </div>
                                     <div class="form-group form-check">
-                                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                        <input type="checkbox" class="form-check-input" id="exampleCheck1" name="remember-me" value="true">
                                         <label class="form-check-label" for="exampleCheck1">记住我</label>
                                     </div>
 			                        <div class="form-group" style="text-align:center">

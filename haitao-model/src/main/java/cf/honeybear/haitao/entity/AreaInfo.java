@@ -48,20 +48,7 @@ public class AreaInfo implements Serializable {
     this.parentid = parentid;
   }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append(getClass().getSimpleName());
-    sb.append(" [");
-    sb.append("Hash = ").append(hashCode());
-    sb.append(", id=").append(id);
-    sb.append(", name=").append(name);
-    sb.append(", arealevel=").append(arealevel);
-    sb.append(", parentid=").append(parentid);
-    sb.append(", address=").append(address);
-    sb.append("]");
-    return sb.toString();
-  }
+
 
   public Address getAddress() {
     return address;
