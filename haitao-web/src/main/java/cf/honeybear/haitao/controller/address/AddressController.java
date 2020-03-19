@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 public class AddressController {
 
+
     @Autowired private AddressMapper addressMapper;
 
     @Autowired private AddressService addressService;
@@ -108,7 +109,7 @@ public class AddressController {
    * @return
    */
   @RequestMapping("/addressdelete/{id}")
-  public Result deleteAddress(@PathVariable Integer id) {
+  public Result deleteAddress(@PathVariable Integer id){
       if (addressService.deleteAddress(id) == 1){
           return Result.ok("删除成功！");
       }else {
